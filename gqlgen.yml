@@ -1,0 +1,8 @@
+schema:
+  - schema.graphql
+
+models:
+  User:
+    model: github.com/chris-ramon/gql-demo/models.User
+  Order:
+    model: github.com/chris-ramon/gql-demo/models.Order

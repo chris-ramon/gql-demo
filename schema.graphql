@@ -1,0 +1,14 @@
+type User {
+  id: ID!
+  firstName: String!
+  lastName: String!
+}
+
+type Order {
+  id: ID!
+}
+
+type Query {
+  currentUser: User
+  orders: [Order]
+}
