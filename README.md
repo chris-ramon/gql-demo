@@ -18,12 +18,12 @@ gql-demo is working demo for exploring the usage of libraries that enables a Gra
 
 Start the development server:
 ```bash
-bin/start.sh
+MYSQL_USER= MYSQL_PASSWORD= MYSQL_DB= bin/start.sh
 ```
 
 Migrate the initial database schema:
 ```bash
-bin/migrate.sh
+MYSQL_USER= MYSQL_PASSWORD= MYSQL_DB= bin/migrate.sh
 ```
 
 Generate Go code within models directory, uses the database schema:
