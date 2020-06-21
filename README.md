@@ -15,9 +15,27 @@ gql-demo is working demo for exploring the usage of libraries that enables a Gra
 - [gqlgen](https://gqlgen.com/getting-started/#setup-project)
 
 ### Running Development Environment
+
+Start the development server:
 ```bash
 bin/start.sh
 ```
+
+Migrate the initial database schema:
+```bash
+bin/migrate.sh
+```
+
+Generate Go code within models directory, uses the database schema:
+```bash
+bin/generate-models.sh
+```
+
+Generate Go code within graphql directory, uses the graphql schema:
+```bash
+bin/generate-gql.sh
+```
+
 ### Demo
 
 #### Query
