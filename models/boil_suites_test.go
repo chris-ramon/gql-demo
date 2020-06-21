@@ -12,61 +12,74 @@ import "testing"
 // It does NOT run each operation group in parallel.
 // Separating the tests thusly grants avoidance of Postgres deadlocks.
 func TestParent(t *testing.T) {
+	t.Run("Chats", testChats)
 	t.Run("Orders", testOrders)
 	t.Run("Users", testUsers)
 }
 
 func TestDelete(t *testing.T) {
+	t.Run("Chats", testChatsDelete)
 	t.Run("Orders", testOrdersDelete)
 	t.Run("Users", testUsersDelete)
 }
 
 func TestQueryDeleteAll(t *testing.T) {
+	t.Run("Chats", testChatsQueryDeleteAll)
 	t.Run("Orders", testOrdersQueryDeleteAll)
 	t.Run("Users", testUsersQueryDeleteAll)
 }
 
 func TestSliceDeleteAll(t *testing.T) {
+	t.Run("Chats", testChatsSliceDeleteAll)
 	t.Run("Orders", testOrdersSliceDeleteAll)
 	t.Run("Users", testUsersSliceDeleteAll)
 }
 
 func TestExists(t *testing.T) {
+	t.Run("Chats", testChatsExists)
 	t.Run("Orders", testOrdersExists)
 	t.Run("Users", testUsersExists)
 }
 
 func TestFind(t *testing.T) {
+	t.Run("Chats", testChatsFind)
 	t.Run("Orders", testOrdersFind)
 	t.Run("Users", testUsersFind)
 }
 
 func TestBind(t *testing.T) {
+	t.Run("Chats", testChatsBind)
 	t.Run("Orders", testOrdersBind)
 	t.Run("Users", testUsersBind)
 }
 
 func TestOne(t *testing.T) {
+	t.Run("Chats", testChatsOne)
 	t.Run("Orders", testOrdersOne)
 	t.Run("Users", testUsersOne)
 }
 
 func TestAll(t *testing.T) {
+	t.Run("Chats", testChatsAll)
 	t.Run("Orders", testOrdersAll)
 	t.Run("Users", testUsersAll)
 }
 
 func TestCount(t *testing.T) {
+	t.Run("Chats", testChatsCount)
 	t.Run("Orders", testOrdersCount)
 	t.Run("Users", testUsersCount)
 }
 
 func TestHooks(t *testing.T) {
+	t.Run("Chats", testChatsHooks)
 	t.Run("Orders", testOrdersHooks)
 	t.Run("Users", testUsersHooks)
 }
 
 func TestInsert(t *testing.T) {
+	t.Run("Chats", testChatsInsert)
+	t.Run("Chats", testChatsInsertWhitelist)
 	t.Run("Orders", testOrdersInsert)
 	t.Run("Orders", testOrdersInsertWhitelist)
 	t.Run("Users", testUsersInsert)
@@ -122,26 +135,31 @@ func TestToManySet(t *testing.T) {}
 func TestToManyRemove(t *testing.T) {}
 
 func TestReload(t *testing.T) {
+	t.Run("Chats", testChatsReload)
 	t.Run("Orders", testOrdersReload)
 	t.Run("Users", testUsersReload)
 }
 
 func TestReloadAll(t *testing.T) {
+	t.Run("Chats", testChatsReloadAll)
 	t.Run("Orders", testOrdersReloadAll)
 	t.Run("Users", testUsersReloadAll)
 }
 
 func TestSelect(t *testing.T) {
+	t.Run("Chats", testChatsSelect)
 	t.Run("Orders", testOrdersSelect)
 	t.Run("Users", testUsersSelect)
 }
 
 func TestUpdate(t *testing.T) {
+	t.Run("Chats", testChatsUpdate)
 	t.Run("Orders", testOrdersUpdate)
 	t.Run("Users", testUsersUpdate)
 }
 
 func TestSliceUpdateAll(t *testing.T) {
+	t.Run("Chats", testChatsSliceUpdateAll)
 	t.Run("Orders", testOrdersSliceUpdateAll)
 	t.Run("Users", testUsersSliceUpdateAll)
 }

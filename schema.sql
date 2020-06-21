@@ -18,3 +18,10 @@ CREATE TABLE orders (
 
 ALTER TABLE orders ADD CONSTRAINT order_pkey PRIMARY KEY (id);
 ALTER TABLE orders ADD CONSTRAINT user_orders_fkey FOREIGN KEY (user_id) REFERENCES users(id);
+
+CREATE TABLE chats (
+  id    integer NOT NULL,
+  uuid 	varchar(55) NOT NULL
+);
+
+ALTER TABLE chats ADD CONSTRAINT chat_pkey PRIMARY KEY (id);

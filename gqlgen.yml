@@ -10,3 +10,5 @@ models:
     model: github.com/chris-ramon/gql-demo/models.User
   Order:
     model: github.com/chris-ramon/gql-demo/models.Order
+  Chat:
+    model: github.com/chris-ramon/gql-demo/models.Chat

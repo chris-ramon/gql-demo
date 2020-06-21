@@ -12,3 +12,11 @@ type Order {
 type Query {
   currentUser: User
 }
+
+type Chat {
+  UUID: ID!
+}
+
+type Subscription {
+  chats: [Chat]
+}

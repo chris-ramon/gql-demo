@@ -2,38 +2,71 @@ package graphql
 
 import (
 	"context"
+	"fmt"
+	"time"
 
+	"github.com/chris-ramon/gql-demo/chats"
 	"github.com/chris-ramon/gql-demo/graphql/generated"
 	"github.com/chris-ramon/gql-demo/models"
 	"github.com/chris-ramon/gql-demo/orders"
 	"github.com/chris-ramon/gql-demo/users"
 )
 
-type Resolver struct {
+type RootResolver struct {
 	us users.Service
 	os orders.Service
+	cs chats.Service
 }
 
-func (r *Resolver) Query() generated.QueryResolver {
+func (r *RootResolver) Query() generated.QueryResolver {
 	return &queryResolver{
-    Resolver: r,
-    us: r.us}
+		RootResolver: r,
+		us:           r.us}
 }
 
-func (r *Resolver) User() generated.UserResolver {
+func (r *RootResolver) Subscription() generated.SubscriptionResolver {
+	return &subscriptionResolver{
+		RootResolver: r,
+		cs:           r.cs,
+	}
+}
+
+func (r *RootResolver) User() generated.UserResolver {
 	return &userResolver{
-    Resolver: r,
-    os: r.os,
-  }
+		RootResolver: r,
+		os:           r.os,
+	}
 }
 
-type queryResolver struct{
-  *Resolver
+type queryResolver struct {
+	*RootResolver
 	us users.Service
 }
-type userResolver struct{
-  *Resolver
+
+type userResolver struct {
+	*RootResolver
 	os orders.Service
+}
+
+type subscriptionResolver struct {
+	*RootResolver
+	cs chats.Service
+}
+
+func (sr *subscriptionResolver) Chats(ctx context.Context) (<-chan []*models.Chat, error) {
+	var i int
+	chats := make(chan []*models.Chat, 1)
+	go func() {
+		for {
+			time.Sleep(1 * time.Second)
+			i += 1
+			c := models.Chat{UUID: fmt.Sprintf("%d", i)}
+			var newChats []*models.Chat
+			newChats = append(newChats, &c)
+			chats <- newChats
+		}
+	}()
+	return chats, nil
 }
 
 func (qr *queryResolver) CurrentUser(ctx context.Context) (*models.User, error) {
@@ -44,12 +77,12 @@ func (ur *userResolver) Orders(ctx context.Context, currentUser *models.User) ([
 	return ur.os.FindOrders(ctx, currentUser)
 }
 
-func NewResolver(us users.Service, os orders.Service) *Resolver {
-	return &Resolver{us, os}
+func NewRootResolver(us users.Service, os orders.Service, cs chats.Service) *RootResolver {
+	return &RootResolver{us, os, cs}
 }
 
-func NewSchemaConfig(us users.Service, os orders.Service) generated.Config {
+func NewSchemaConfig(us users.Service, os orders.Service, cs chats.Service) generated.Config {
 	return generated.Config{
-		Resolvers: NewResolver(us, os),
+		Resolvers: NewRootResolver(us, os, cs),
 	}
 }
