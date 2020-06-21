@@ -58,7 +58,7 @@ type chatResolver struct {
 }
 
 func (r *RootResolver) TotalUnreadMessages(ctx context.Context, obj *models.Chat) (*int, error) {
-  return &obj.TotalUnreadMessages.Int, nil
+	return &obj.TotalUnreadMessages.Int, nil
 }
 
 type subscriptionResolver struct {
