@@ -2,8 +2,10 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	_ "github.com/go-sql-driver/mysql"
 
@@ -13,17 +15,32 @@ import (
 
 	"github.com/chris-ramon/gql-demo/graphql"
 	"github.com/chris-ramon/gql-demo/graphql/generated"
+	"github.com/chris-ramon/gql-demo/orders"
+	"github.com/chris-ramon/gql-demo/users"
 )
 
 func main() {
-	db, err := sql.Open("mysql", "root:root@/gql_demo_dev")
+	mysqlUser := os.Getenv("MYSQL_USER")
+	mysqlPassword := os.Getenv("MYSQL_PASSWORD")
+	mysqlDB := os.Getenv("MYSQL_DB")
+
+	connectionStr := fmt.Sprintf("%s:%s@/%s", mysqlUser, mysqlPassword, mysqlDB)
+	db, err := sql.Open("mysql", connectionStr)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	boil.DebugMode = true
 
-	srv := handler.NewDefaultServer(generated.NewExecutableSchema(graphql.NewSchemaConfig(db)))
+	var (
+		ur *users.Repository  = users.NewRepository(db)
+		or *orders.Repository = orders.NewRepository(db)
+
+		us users.Service  = users.NewService(ur)
+		os orders.Service = orders.NewService(or)
+	)
+
+	srv := handler.NewDefaultServer(generated.NewExecutableSchema(graphql.NewSchemaConfig(us, os)))
 
 	http.Handle("/playground", playground.Handler("GraphQL playground", "/graphql"))
 	http.Handle("/graphql", srv)
