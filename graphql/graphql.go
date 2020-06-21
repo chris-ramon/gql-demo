@@ -22,7 +22,8 @@ type RootResolver struct {
 func (r *RootResolver) Query() generated.QueryResolver {
 	return &queryResolver{
 		RootResolver: r,
-		us:           r.us}
+		us:           r.us,
+	}
 }
 
 func (r *RootResolver) Subscription() generated.SubscriptionResolver {
