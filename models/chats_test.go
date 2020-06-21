@@ -568,7 +568,7 @@ func testChatsSelect(t *testing.T) {
 }
 
 var (
-	chatDBTypes = map[string]string{`ID`: `int`, `UUID`: `varchar`}
+	chatDBTypes = map[string]string{`ID`: `int`, `UUID`: `varchar`, `TotalUnreadMessages`: `int`}
 	_           = bytes.MinRead
 )
 

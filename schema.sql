@@ -22,6 +22,7 @@ ALTER TABLE orders ADD CONSTRAINT user_orders_fkey FOREIGN KEY (user_id) REFEREN
 CREATE TABLE chats (
 	id INTEGER NOT NULL
 	,uuid VARCHAR(55) NOT NULL
+	,total_unread_messages INTEGER DEFAULT 0
 	);
 
 ALTER TABLE chats ADD CONSTRAINT chat_pkey PRIMARY KEY (id);

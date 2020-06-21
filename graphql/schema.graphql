@@ -15,6 +15,7 @@ type Query {
 
 type Chat {
   UUID: ID!
+  TotalUnreadMessages: Int
 }
 
 type Subscription {

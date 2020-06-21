@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"github.com/friendsofgo/errors"
+	"github.com/volatiletech/null"
 	"github.com/volatiletech/sqlboiler/boil"
 	"github.com/volatiletech/sqlboiler/queries"
 	"github.com/volatiletech/sqlboiler/queries/qm"
@@ -23,19 +24,22 @@ import (
 
 // Chat is an object representing the database table.
 type Chat struct {
-	ID   int    `boil:"id" json:"id" toml:"id" yaml:"id"`
-	UUID string `boil:"uuid" json:"uuid" toml:"uuid" yaml:"uuid"`
+	ID                  int      `boil:"id" json:"id" toml:"id" yaml:"id"`
+	UUID                string   `boil:"uuid" json:"uuid" toml:"uuid" yaml:"uuid"`
+	TotalUnreadMessages null.Int `boil:"total_unread_messages" json:"total_unread_messages,omitempty" toml:"total_unread_messages" yaml:"total_unread_messages,omitempty"`
 
 	R *chatR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L chatL  `boil:"-" json:"-" toml:"-" yaml:"-"`
 }
 
 var ChatColumns = struct {
-	ID   string
-	UUID string
+	ID                  string
+	UUID                string
+	TotalUnreadMessages string
 }{
-	ID:   "id",
-	UUID: "uuid",
+	ID:                  "id",
+	UUID:                "uuid",
+	TotalUnreadMessages: "total_unread_messages",
 }
 
 // Generated where
@@ -72,12 +76,37 @@ func (w whereHelperstring) IN(slice []string) qm.QueryMod {
 	return qm.WhereIn(fmt.Sprintf("%s IN ?", w.field), values...)
 }
 
+type whereHelpernull_Int struct{ field string }
+
+func (w whereHelpernull_Int) EQ(x null.Int) qm.QueryMod {
+	return qmhelper.WhereNullEQ(w.field, false, x)
+}
+func (w whereHelpernull_Int) NEQ(x null.Int) qm.QueryMod {
+	return qmhelper.WhereNullEQ(w.field, true, x)
+}
+func (w whereHelpernull_Int) IsNull() qm.QueryMod    { return qmhelper.WhereIsNull(w.field) }
+func (w whereHelpernull_Int) IsNotNull() qm.QueryMod { return qmhelper.WhereIsNotNull(w.field) }
+func (w whereHelpernull_Int) LT(x null.Int) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.LT, x)
+}
+func (w whereHelpernull_Int) LTE(x null.Int) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.LTE, x)
+}
+func (w whereHelpernull_Int) GT(x null.Int) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.GT, x)
+}
+func (w whereHelpernull_Int) GTE(x null.Int) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.GTE, x)
+}
+
 var ChatWhere = struct {
-	ID   whereHelperint
-	UUID whereHelperstring
+	ID                  whereHelperint
+	UUID                whereHelperstring
+	TotalUnreadMessages whereHelpernull_Int
 }{
-	ID:   whereHelperint{field: "`chats`.`id`"},
-	UUID: whereHelperstring{field: "`chats`.`uuid`"},
+	ID:                  whereHelperint{field: "`chats`.`id`"},
+	UUID:                whereHelperstring{field: "`chats`.`uuid`"},
+	TotalUnreadMessages: whereHelpernull_Int{field: "`chats`.`total_unread_messages`"},
 }
 
 // ChatRels is where relationship names are stored.
@@ -97,9 +126,9 @@ func (*chatR) NewStruct() *chatR {
 type chatL struct{}
 
 var (
-	chatAllColumns            = []string{"id", "uuid"}
+	chatAllColumns            = []string{"id", "uuid", "total_unread_messages"}
 	chatColumnsWithoutDefault = []string{"id", "uuid"}
-	chatColumnsWithDefault    = []string{}
+	chatColumnsWithDefault    = []string{"total_unread_messages"}
 	chatPrimaryKeyColumns     = []string{"id"}
 )
 

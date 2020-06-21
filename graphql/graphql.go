@@ -2,8 +2,9 @@ package graphql
 
 import (
 	"context"
-	"fmt"
 	"time"
+
+	"github.com/volatiletech/null"
 
 	"github.com/chris-ramon/gql-demo/chats"
 	"github.com/chris-ramon/gql-demo/graphql/generated"
@@ -38,6 +39,10 @@ func (r *RootResolver) User() generated.UserResolver {
 	}
 }
 
+func (r *RootResolver) Chat() generated.ChatResolver {
+	return &chatResolver{r}
+}
+
 type queryResolver struct {
 	*RootResolver
 	us users.Service
@@ -48,21 +53,30 @@ type userResolver struct {
 	os orders.Service
 }
 
+type chatResolver struct {
+	*RootResolver
+}
+
+func (r *RootResolver) TotalUnreadMessages(ctx context.Context, obj *models.Chat) (*int, error) {
+  return &obj.TotalUnreadMessages.Int, nil
+}
+
 type subscriptionResolver struct {
 	*RootResolver
 	cs chats.Service
 }
 
 func (sr *subscriptionResolver) Chats(ctx context.Context) (<-chan []*models.Chat, error) {
-	var i int
 	chats := make(chan []*models.Chat, 1)
+	c1 := models.Chat{UUID: "345", TotalUnreadMessages: null.Int{Int: 0, Valid: true}}
+	c2 := models.Chat{UUID: "987", TotalUnreadMessages: null.Int{Int: 0, Valid: true}}
 	go func() {
 		for {
 			time.Sleep(1 * time.Second)
-			i += 1
-			c := models.Chat{UUID: fmt.Sprintf("%d", i)}
 			var newChats []*models.Chat
-			newChats = append(newChats, &c)
+			c1.TotalUnreadMessages = null.Int{Int: c1.TotalUnreadMessages.Int + 1, Valid: true}
+			newChats = append(newChats, &c1)
+			newChats = append(newChats, &c2)
 			chats <- newChats
 		}
 	}()

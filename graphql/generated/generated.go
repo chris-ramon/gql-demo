@@ -36,6 +36,7 @@ type Config struct {
 }
 
 type ResolverRoot interface {
+	Chat() ChatResolver
 	Query() QueryResolver
 	Subscription() SubscriptionResolver
 	User() UserResolver
@@ -46,7 +47,8 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	Chat struct {
-		UUID func(childComplexity int) int
+		TotalUnreadMessages func(childComplexity int) int
+		UUID                func(childComplexity int) int
 	}
 
 	Order struct {
@@ -69,6 +71,9 @@ type ComplexityRoot struct {
 	}
 }
 
+type ChatResolver interface {
+	TotalUnreadMessages(ctx context.Context, obj *models.Chat) (*int, error)
+}
 type QueryResolver interface {
 	CurrentUser(ctx context.Context) (*models.User, error)
 }
@@ -93,6 +98,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	ec := executionContext{nil, e}
 	_ = ec
 	switch typeName + "." + field {
+
+	case "Chat.TotalUnreadMessages":
+		if e.complexity.Chat.TotalUnreadMessages == nil {
+			break
+		}
+
+		return e.complexity.Chat.TotalUnreadMessages(childComplexity), true
 
 	case "Chat.UUID":
 		if e.complexity.Chat.UUID == nil {
@@ -234,6 +246,7 @@ type Query {
 
 type Chat {
   UUID: ID!
+  TotalUnreadMessages: Int
 }
 
 type Subscription {
@@ -329,6 +342,37 @@ func (ec *executionContext) _Chat_UUID(ctx context.Context, field graphql.Collec
 	res := resTmp.(string)
 	fc.Result = res
 	return ec.marshalNID2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Chat_TotalUnreadMessages(ctx context.Context, field graphql.CollectedField, obj *models.Chat) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "Chat",
+		Field:    field,
+		Args:     nil,
+		IsMethod: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Chat().TotalUnreadMessages(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Order_id(ctx context.Context, field graphql.CollectedField, obj *models.Order) (ret graphql.Marshaler) {
@@ -1716,8 +1760,19 @@ func (ec *executionContext) _Chat(ctx context.Context, sel ast.SelectionSet, obj
 		case "UUID":
 			out.Values[i] = ec._Chat_UUID(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
+		case "TotalUnreadMessages":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Chat_TotalUnreadMessages(ctx, field, obj)
+				return res
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -2464,6 +2519,29 @@ func (ec *executionContext) marshalOChat2ᚖgithubᚗcomᚋchrisᚑramonᚋgql�
 		return graphql.Null
 	}
 	return ec._Chat(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOInt2int(ctx context.Context, v interface{}) (int, error) {
+	return graphql.UnmarshalInt(v)
+}
+
+func (ec *executionContext) marshalOInt2int(ctx context.Context, sel ast.SelectionSet, v int) graphql.Marshaler {
+	return graphql.MarshalInt(v)
+}
+
+func (ec *executionContext) unmarshalOInt2ᚖint(ctx context.Context, v interface{}) (*int, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalOInt2int(ctx, v)
+	return &res, err
+}
+
+func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.SelectionSet, v *int) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec.marshalOInt2int(ctx, sel, *v)
 }
 
 func (ec *executionContext) marshalOOrder2githubᚗcomᚋchrisᚑramonᚋgqlᚑdemoᚋmodelsᚐOrder(ctx context.Context, sel ast.SelectionSet, v models.Order) graphql.Marshaler {
