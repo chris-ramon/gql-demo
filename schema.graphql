@@ -2,6 +2,7 @@ type User {
   id: ID!
   firstName: String!
   lastName: String!
+  orders: [Order]
 }
 
 type Order {
@@ -10,5 +11,4 @@ type Order {
 
 type Query {
   currentUser: User
-  orders: [Order]
 }

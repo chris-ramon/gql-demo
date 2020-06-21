@@ -2,51 +2,77 @@ package main
 
 import (
 	"context"
+	"database/sql"
 	"encoding/json"
+	_ "github.com/go-sql-driver/mysql"
 	"log"
 	"net/http"
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/executor"
-	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/99designs/gqlgen/graphql/handler/extension"
+	"github.com/99designs/gqlgen/graphql/playground"
+	"github.com/volatiletech/sqlboiler/boil"
 	"github.com/chris-ramon/gql-demo/models"
 )
 
-type Resolver struct{}
+type Resolver struct {
+	db *sql.DB
+}
 
 func (r *Resolver) Query() QueryResolver {
 	return &queryResolver{r}
 }
 
+func (r *Resolver) User() UserResolver {
+	return &userResolver{r}
+}
+
 type queryResolver struct{ *Resolver }
+type userResolver struct{ *Resolver }
 
 func (qr *queryResolver) CurrentUser(ctx context.Context) (*models.User, error) {
-	return &models.User{ID: "1", FirstName: "gopher", LastName: "gopher"}, nil
+	user, err := models.FindUser(context.TODO(), qr.db, 1)
+	if err != nil {
+    log.Printf("failed to find user: %v", err)
+    return nil, nil
+	}
+  return user, nil
 }
 
-func (qr *queryResolver) Orders(ctx context.Context) ([]*models.Order, error) {
-  var orders []*models.Order
-  orders = append(orders, &models.Order{ID: "2"}, &models.Order{ID: "3"})
-  return orders, nil
+func (ur *userResolver) Orders(ctx context.Context, obj *models.User) ([]*models.Order, error) {
+  orders, err := obj.Orders().All(ctx, ur.db)
+  if err != nil {
+    log.Printf("failed to find orders: %v", err)
+    return orders, nil
+  }
+
+	return orders, nil
 }
 
-func NewResolver() *Resolver {
-	return &Resolver{}
+func NewResolver(db *sql.DB) *Resolver {
+	return &Resolver{db}
 }
 
-func NewSchemaConfig() Config {
+func NewSchemaConfig(db *sql.DB) Config {
 	return Config{
-		Resolvers: NewResolver(),
+		Resolvers: NewResolver(db),
 	}
 }
 
 func main() {
+	db, err := sql.Open("mysql", "root:root@/gql_demo_dev")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	boil.DebugMode = true
+
 	http.Handle("/playground", playground.Handler("GraphQL playground", "/"))
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		r = r.WithContext(graphql.StartOperationTrace(r.Context()))
 
-		schema := NewExecutableSchema(NewSchemaConfig())
+		schema := NewExecutableSchema(NewSchemaConfig(db))
 		exec := executor.New(schema)
 		exec.Use(extension.Introspection{})
 
@@ -91,5 +117,6 @@ func main() {
 		w.Write(b)
 	})
 	log.Println("server running on port :8080")
+	log.Println("graphql playground running on :8080/playground")
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
