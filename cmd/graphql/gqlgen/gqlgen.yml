@@ -1,0 +1,14 @@
+schema:
+  - schema.graphql
+
+exec:
+  filename: generated/generated.go
+  package: generated
+
+models:
+  User:
+    model: github.com/chris-ramon/gql-demo/internal/models.User
+  Order:
+    model: github.com/chris-ramon/gql-demo/internal/models.Order
+  Chat:
+    model: github.com/chris-ramon/gql-demo/internal/models.Chat

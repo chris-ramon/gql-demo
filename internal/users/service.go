@@ -3,7 +3,7 @@ package users
 import (
 	"context"
 
-	"github.com/chris-ramon/gql-demo/models"
+	"github.com/chris-ramon/gql-demo/internal/models"
 )
 
 type Service interface {

@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"log"
 
-	"github.com/chris-ramon/gql-demo/models"
+	"github.com/chris-ramon/gql-demo/internal/models"
 )
 
 type Repository struct {

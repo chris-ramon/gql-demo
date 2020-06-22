@@ -6,7 +6,7 @@ import (
 	"errors"
 	"log"
 
-	"github.com/chris-ramon/gql-demo/models"
+	"github.com/chris-ramon/gql-demo/internal/models"
 )
 
 type Repository struct {

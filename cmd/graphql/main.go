@@ -13,11 +13,11 @@ import (
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/volatiletech/sqlboiler/boil"
 
-	"github.com/chris-ramon/gql-demo/chats"
-	"github.com/chris-ramon/gql-demo/graphql"
-	"github.com/chris-ramon/gql-demo/graphql/generated"
-	"github.com/chris-ramon/gql-demo/orders"
-	"github.com/chris-ramon/gql-demo/users"
+	"github.com/chris-ramon/gql-demo/cmd/graphql/gqlgen"
+	"github.com/chris-ramon/gql-demo/cmd/graphql/gqlgen/generated"
+	"github.com/chris-ramon/gql-demo/internal/chats"
+	"github.com/chris-ramon/gql-demo/internal/orders"
+	"github.com/chris-ramon/gql-demo/internal/users"
 )
 
 func main() {
@@ -43,7 +43,7 @@ func main() {
 		cs chats.Service  = chats.NewService(cr)
 	)
 
-	srv := handler.NewDefaultServer(generated.NewExecutableSchema(graphql.NewSchemaConfig(us, os, cs)))
+	srv := handler.NewDefaultServer(generated.NewExecutableSchema(gqlgen.NewSchemaConfig(us, os, cs)))
 
 	http.Handle("/playground", playground.Handler("GraphQL playground", "/graphql"))
 	http.Handle("/graphql", srv)

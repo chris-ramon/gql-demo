@@ -1,4 +1,4 @@
-package graphql
+package gqlgen
 
 import (
 	"context"
@@ -6,11 +6,11 @@ import (
 
 	"github.com/volatiletech/null"
 
-	"github.com/chris-ramon/gql-demo/chats"
-	"github.com/chris-ramon/gql-demo/graphql/generated"
-	"github.com/chris-ramon/gql-demo/models"
-	"github.com/chris-ramon/gql-demo/orders"
-	"github.com/chris-ramon/gql-demo/users"
+	"github.com/chris-ramon/gql-demo/cmd/graphql/gqlgen/generated"
+	"github.com/chris-ramon/gql-demo/internal/models"
+	"github.com/chris-ramon/gql-demo/internal/chats"
+	"github.com/chris-ramon/gql-demo/internal/orders"
+	"github.com/chris-ramon/gql-demo/internal/users"
 )
 
 type RootResolver struct {

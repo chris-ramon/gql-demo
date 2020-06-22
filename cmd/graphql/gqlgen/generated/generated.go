@@ -13,7 +13,7 @@ import (
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
-	"github.com/chris-ramon/gql-demo/models"
+	"github.com/chris-ramon/gql-demo/internal/models"
 	gqlparser "github.com/vektah/gqlparser/v2"
 	"github.com/vektah/gqlparser/v2/ast"
 )
@@ -229,7 +229,7 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 }
 
 var sources = []*ast.Source{
-	&ast.Source{Name: "graphql/schema.graphql", Input: `type User {
+	&ast.Source{Name: "schema.graphql", Input: `type User {
   id: ID!
   firstName: String!
   lastName: String!
@@ -437,7 +437,7 @@ func (ec *executionContext) _Query_currentUser(ctx context.Context, field graphq
 	}
 	res := resTmp.(*models.User)
 	fc.Result = res
-	return ec.marshalOUser2ᚖgithubᚗcomᚋchrisᚑramonᚋgqlᚑdemoᚋmodelsᚐUser(ctx, field.Selections, res)
+	return ec.marshalOUser2ᚖgithubᚗcomᚋchrisᚑramonᚋgqlᚑdemoᚋinternalᚋmodelsᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -544,7 +544,7 @@ func (ec *executionContext) _Subscription_chats(ctx context.Context, field graph
 			w.Write([]byte{'{'})
 			graphql.MarshalString(field.Alias).MarshalGQL(w)
 			w.Write([]byte{':'})
-			ec.marshalOChat2ᚕᚖgithubᚗcomᚋchrisᚑramonᚋgqlᚑdemoᚋmodelsᚐChat(ctx, field.Selections, res).MarshalGQL(w)
+			ec.marshalOChat2ᚕᚖgithubᚗcomᚋchrisᚑramonᚋgqlᚑdemoᚋinternalᚋmodelsᚐChat(ctx, field.Selections, res).MarshalGQL(w)
 			w.Write([]byte{'}'})
 		})
 	}
@@ -680,7 +680,7 @@ func (ec *executionContext) _User_orders(ctx context.Context, field graphql.Coll
 	}
 	res := resTmp.([]*models.Order)
 	fc.Result = res
-	return ec.marshalOOrder2ᚕᚖgithubᚗcomᚋchrisᚑramonᚋgqlᚑdemoᚋmodelsᚐOrder(ctx, field.Selections, res)
+	return ec.marshalOOrder2ᚕᚖgithubᚗcomᚋchrisᚑramonᚋgqlᚑdemoᚋinternalᚋmodelsᚐOrder(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) ___Directive_name(ctx context.Context, field graphql.CollectedField, obj *introspection.Directive) (ret graphql.Marshaler) {
@@ -2470,11 +2470,11 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	return ec.marshalOBoolean2bool(ctx, sel, *v)
 }
 
-func (ec *executionContext) marshalOChat2githubᚗcomᚋchrisᚑramonᚋgqlᚑdemoᚋmodelsᚐChat(ctx context.Context, sel ast.SelectionSet, v models.Chat) graphql.Marshaler {
+func (ec *executionContext) marshalOChat2githubᚗcomᚋchrisᚑramonᚋgqlᚑdemoᚋinternalᚋmodelsᚐChat(ctx context.Context, sel ast.SelectionSet, v models.Chat) graphql.Marshaler {
 	return ec._Chat(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalOChat2ᚕᚖgithubᚗcomᚋchrisᚑramonᚋgqlᚑdemoᚋmodelsᚐChat(ctx context.Context, sel ast.SelectionSet, v []*models.Chat) graphql.Marshaler {
+func (ec *executionContext) marshalOChat2ᚕᚖgithubᚗcomᚋchrisᚑramonᚋgqlᚑdemoᚋinternalᚋmodelsᚐChat(ctx context.Context, sel ast.SelectionSet, v []*models.Chat) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -2501,7 +2501,7 @@ func (ec *executionContext) marshalOChat2ᚕᚖgithubᚗcomᚋchrisᚑramonᚋgq
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOChat2ᚖgithubᚗcomᚋchrisᚑramonᚋgqlᚑdemoᚋmodelsᚐChat(ctx, sel, v[i])
+			ret[i] = ec.marshalOChat2ᚖgithubᚗcomᚋchrisᚑramonᚋgqlᚑdemoᚋinternalᚋmodelsᚐChat(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -2514,7 +2514,7 @@ func (ec *executionContext) marshalOChat2ᚕᚖgithubᚗcomᚋchrisᚑramonᚋgq
 	return ret
 }
 
-func (ec *executionContext) marshalOChat2ᚖgithubᚗcomᚋchrisᚑramonᚋgqlᚑdemoᚋmodelsᚐChat(ctx context.Context, sel ast.SelectionSet, v *models.Chat) graphql.Marshaler {
+func (ec *executionContext) marshalOChat2ᚖgithubᚗcomᚋchrisᚑramonᚋgqlᚑdemoᚋinternalᚋmodelsᚐChat(ctx context.Context, sel ast.SelectionSet, v *models.Chat) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -2544,11 +2544,11 @@ func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.Sele
 	return ec.marshalOInt2int(ctx, sel, *v)
 }
 
-func (ec *executionContext) marshalOOrder2githubᚗcomᚋchrisᚑramonᚋgqlᚑdemoᚋmodelsᚐOrder(ctx context.Context, sel ast.SelectionSet, v models.Order) graphql.Marshaler {
+func (ec *executionContext) marshalOOrder2githubᚗcomᚋchrisᚑramonᚋgqlᚑdemoᚋinternalᚋmodelsᚐOrder(ctx context.Context, sel ast.SelectionSet, v models.Order) graphql.Marshaler {
 	return ec._Order(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalOOrder2ᚕᚖgithubᚗcomᚋchrisᚑramonᚋgqlᚑdemoᚋmodelsᚐOrder(ctx context.Context, sel ast.SelectionSet, v []*models.Order) graphql.Marshaler {
+func (ec *executionContext) marshalOOrder2ᚕᚖgithubᚗcomᚋchrisᚑramonᚋgqlᚑdemoᚋinternalᚋmodelsᚐOrder(ctx context.Context, sel ast.SelectionSet, v []*models.Order) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -2575,7 +2575,7 @@ func (ec *executionContext) marshalOOrder2ᚕᚖgithubᚗcomᚋchrisᚑramonᚋg
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOOrder2ᚖgithubᚗcomᚋchrisᚑramonᚋgqlᚑdemoᚋmodelsᚐOrder(ctx, sel, v[i])
+			ret[i] = ec.marshalOOrder2ᚖgithubᚗcomᚋchrisᚑramonᚋgqlᚑdemoᚋinternalᚋmodelsᚐOrder(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -2588,7 +2588,7 @@ func (ec *executionContext) marshalOOrder2ᚕᚖgithubᚗcomᚋchrisᚑramonᚋg
 	return ret
 }
 
-func (ec *executionContext) marshalOOrder2ᚖgithubᚗcomᚋchrisᚑramonᚋgqlᚑdemoᚋmodelsᚐOrder(ctx context.Context, sel ast.SelectionSet, v *models.Order) graphql.Marshaler {
+func (ec *executionContext) marshalOOrder2ᚖgithubᚗcomᚋchrisᚑramonᚋgqlᚑdemoᚋinternalᚋmodelsᚐOrder(ctx context.Context, sel ast.SelectionSet, v *models.Order) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -2618,11 +2618,11 @@ func (ec *executionContext) marshalOString2ᚖstring(ctx context.Context, sel as
 	return ec.marshalOString2string(ctx, sel, *v)
 }
 
-func (ec *executionContext) marshalOUser2githubᚗcomᚋchrisᚑramonᚋgqlᚑdemoᚋmodelsᚐUser(ctx context.Context, sel ast.SelectionSet, v models.User) graphql.Marshaler {
+func (ec *executionContext) marshalOUser2githubᚗcomᚋchrisᚑramonᚋgqlᚑdemoᚋinternalᚋmodelsᚐUser(ctx context.Context, sel ast.SelectionSet, v models.User) graphql.Marshaler {
 	return ec._User(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalOUser2ᚖgithubᚗcomᚋchrisᚑramonᚋgqlᚑdemoᚋmodelsᚐUser(ctx context.Context, sel ast.SelectionSet, v *models.User) graphql.Marshaler {
+func (ec *executionContext) marshalOUser2ᚖgithubᚗcomᚋchrisᚑramonᚋgqlᚑdemoᚋinternalᚋmodelsᚐUser(ctx context.Context, sel ast.SelectionSet, v *models.User) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
