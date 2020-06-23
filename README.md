@@ -26,12 +26,12 @@ Migrate the initial database schema:
 MYSQL_USER= MYSQL_PASSWORD= MYSQL_DB= bin/migrate.sh
 ```
 
-Generate Go code within models directory, uses the database schema:
+Generate Go code within `internal/models` directory, uses the database schema:
 ```bash
 bin/generate-models.sh
 ```
 
-Generate Go code within graphql directory, uses the graphql schema:
+Generate Go code within `cmd/graphql/gqlgen` directory, uses the graphql schema:
 ```bash
 bin/generate-gql.sh
 ```
